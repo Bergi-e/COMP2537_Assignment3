@@ -2,6 +2,8 @@ function setup () {
   let firstCard = null;
   let secondCard = null;
   let preventClick = false;
+  let pairsMatched = 0;
+  let totalPairs = 3; // Default
 
   function checkForMatch() {
     console.log("Running checkForMatch");
@@ -15,8 +17,11 @@ function setup () {
   function disableMatchedCards() {
     console.log("Running disableMatchedCards");
     $(`#${firstCard.id}`).parent().off('click').addClass('matched');
-
     $(`#${secondCard.id}`).parent().off('click').addClass('matched');
+    pairsMatched++;
+    if (pairsMatched === totalPairs) {
+      alert("You win!");
+    }
     resetSelection();
   }
 
