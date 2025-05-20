@@ -5,7 +5,7 @@ function setup () {
   let pairsMatched = 0;
   let totalPairs = 3; // Default
   let clicks = 0;
-  let timer = 5; // Default
+  let timer = 60; // Default
   let gameTimer;
 
   function updateClicks() {
