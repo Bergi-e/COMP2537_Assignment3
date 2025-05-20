@@ -52,6 +52,16 @@ function setup () {
     const shuffledCards = shuffle(cardData);
 
     $("#game_grid").empty();
+
+    const preloadImages = (src) => new Promise((resolve) => {
+      const img = new Image();
+      img.onload = resolve;
+      img.onerror = resolve;
+      img.src = src;
+    });
+
+    await Promise.all(shuffledCards.map(url => preloadImages(url)));
+
     shuffledCards.forEach(url => {
       const $card = $(
         `<div class="card col-3 col-md-2">
@@ -154,6 +164,7 @@ function setup () {
     stopTimer();             
     const endMsg = "You Win!!!";
     $("#message").text(endMsg).show();
+    $('#powerupBtn').hide();
   }
 
   function resetGame() {
@@ -179,7 +190,6 @@ function setup () {
 
     updateTimer();
     loadCards(totalPairs);
-
   }
 
   $("#difficulty").on('change', function() {
@@ -199,8 +209,9 @@ function setup () {
   $("#startBtn").on("click", function() {
     if (gameStarted) return;
     gameStarted = true;
-    $("#startBtn").prop('disabled', true);
-    $("#difficulty").prop('disabled', true);
+    $("#startBtn").prop("disabled", true);
+    $("#difficulty").prop("disabled", true);
+    $("#powerupBtn").show();
     loadCards();
     startTimer();
   });
@@ -212,18 +223,37 @@ function setup () {
 
   $(".card").on("click", cardClickHandler);
   $("#resetBtn").on("click", resetGame);
+  $("#powerupBtn").hide();
 
   $('#game_grid').addClass(currentDifficulty);
   loadCards();
 
   $('#theme-default').on('click', () => applyTheme('default'));
-$('#theme-dark'   ).on('click', () => applyTheme('dark'));
-$('#theme-blue'   ).on('click', () => applyTheme('blue'));
+  $('#theme-dark').on('click', () => applyTheme('dark'));
+  $('#theme-blue').on('click', () => applyTheme('blue'));
 
-function applyTheme(name) {
-  document.body.classList.remove('theme-default', 'theme-dark', 'theme-blue');
-  document.body.classList.add(`theme-${name}`);
-}
+  function applyTheme(name) {
+    document.body.classList.remove('theme-default', 'theme-dark', 'theme-blue');
+    document.body.classList.add(`theme-${name}`);
+  }
+
+  $("#powerupBtn").on("click", function() {
+    if ($('#powerupBtn').prop("disabled")) return
+
+    preventClick = true;
+    alert("Power-up activated! All cards will be flipped for 1 second.");
+
+    const $unmatchedCards = $('.card').not('.matched');
+
+    $unmatchedCards.addClass('flip');
+    setTimeout(() => {
+      $unmatchedCards.removeClass('flip');
+      preventClick = false;
+    }, 1000);
+
+    $("#powerupBtn").hide();
+  })
+
 }
 
 $(document).ready(setup)
