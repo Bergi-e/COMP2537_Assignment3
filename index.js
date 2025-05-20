@@ -167,6 +167,7 @@ function setup () {
 
     gameStarted = false;
     $("#startBtn").prop("disabled", false);
+    $("#difficulty").prop("disabled", false);
 
     updateClicks();
     updatePairsMatched();
@@ -179,6 +180,7 @@ function setup () {
   }
 
   $("#difficulty").on('change', function() {
+    if (gameStarted) return;
     currentDifficulty = this.value;
     totalPairs = difficulties[currentDifficulty].pairs;
     timer = difficulties[currentDifficulty].time;
@@ -195,6 +197,7 @@ function setup () {
     if (gameStarted) return;
     gameStarted = true;
     $("#startBtn").prop('disabled', true);
+    $("#difficulty").prop('disabled', true);
     loadCards();
     startTimer();
   });
