@@ -8,6 +8,13 @@ function setup () {
   let timer = 60; // Default
   let gameTimer;
   let gameStarted = false;
+  let currentDifficulty = "easy";
+
+  const difficulties = {
+    easy: { pairs: 3, time: 60 },
+    medium: { pairs: 6, time: 90 },
+    hard: { pairs: 12, time: 120 }
+  };
 
   $("#startBtn").on("click", function() {
     if (gameStarted) return;
