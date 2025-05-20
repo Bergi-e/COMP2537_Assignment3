@@ -29,7 +29,9 @@ function setup () {
     const promises = ids.map(id => 
       fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
         .then(res => res.json())
-        .then(data => data.sprites.other["official-artwork"].front_default)
+        .then(data => {
+          return data.sprites.other["official-artwork"].front_default || data.sprites.front_default; 
+        })
     );
   return Promise.all(promises);
   }
@@ -109,6 +111,7 @@ function setup () {
     if (!gameStarted || preventClick) return;
     const $card = $(this);
     if ($card.hasClass('matched')) return;
+    if (firstCard && $card.is(firstCard.elem)) return;
 
     $card.toggleClass('flip');
     const url = $card.data('url');
@@ -212,6 +215,15 @@ function setup () {
 
   $('#game_grid').addClass(currentDifficulty);
   loadCards();
+
+  $('#theme-default').on('click', () => applyTheme('default'));
+$('#theme-dark'   ).on('click', () => applyTheme('dark'));
+$('#theme-blue'   ).on('click', () => applyTheme('blue'));
+
+function applyTheme(name) {
+  document.body.classList.remove('theme-default', 'theme-dark', 'theme-blue');
+  document.body.classList.add(`theme-${name}`);
+}
 }
 
 $(document).ready(setup)

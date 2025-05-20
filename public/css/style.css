@@ -3,6 +3,30 @@ body {
   transition: background-color 0.5s;
 }
 
+/* Theme Colors */
+body.theme-default {
+  background-color: white;
+  color: black;
+}
+body.theme-dark {
+  background-color: #121212;
+  color: white;
+}
+body.theme-blue {
+  background-color: #e7f5ff;
+  color: #0d3b66;
+}
+
+/* Navbar Themes */
+body.theme-default .navbar { background-color: #f8f9fa !important; }
+body.theme-dark    .navbar { background-color: #343a40 !important; }
+body.theme-blue    .navbar { background-color: #0d6efd !important; }
+
+/* Pokeball BG Themes */
+body.theme-default .card { background-color: white; }
+body.theme-dark    .card { background-color: #444;   }
+body.theme-blue    .card { background-color: #cfe2ff;}
+
 #game_grid {
   display: grid;
   gap: 10px;
