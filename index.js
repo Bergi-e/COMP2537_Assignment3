@@ -40,7 +40,7 @@ function setup () {
     console.log("Running updateTimer");
     const mins = Math.floor(timer / 60);
     const secs = timer % 60;
-    const padded = secs.toString().padStart(2, '0');
+    const padded = secs.toString().padStart(2, "0");
     $("#timer").text(`${mins}:${padded}`);
   }
 
@@ -55,12 +55,12 @@ function setup () {
 
   function disableMatchedCards() {
     console.log("Running disableMatchedCards");
-    $(`#${firstCard.id}`).parent().off('click').addClass('matched');
-    $(`#${secondCard.id}`).parent().off('click').addClass('matched');
+    $(`#${firstCard.id}`).parent().off("click").addClass("matched");
+    $(`#${secondCard.id}`).parent().off("click").addClass("matched");
     pairsMatched++;
     updatePairsMatched();
-    console.log(`Pairs matched: ${pairsMatched}`);
-    console.log(`Total pairs: ${totalPairs}`);
+    console.log("Pairs matched: ${pairsMatched}");
+    console.log("Total pairs: ${totalPairs}");
     if (pairsMatched === totalPairs) endGame();
     resetSelection();
   }
@@ -68,8 +68,8 @@ function setup () {
   function unflipCards() {
     console.log("Running unflipCards");
     setTimeout(() => {
-      $(`#${firstCard.id}`).parent().removeClass('flip');
-      $(`#${secondCard.id}`).parent().removeClass('flip');
+      $(`#${firstCard.id}`).parent().removeClass("flip");
+      $(`#${secondCard.id}`).parent().removeClass("flip");
       resetSelection();
     }, 1000);
   }
@@ -84,26 +84,41 @@ function setup () {
   function outOfTime() {
     console.log("Running outOfTime");
     preventClick = true;
-    const endMsg = 'Time is up!!!';
-    $('#message').text(endMsg).show();
+    const endMsg = "Time is up!!!";
+    $("#message").text(endMsg).show();
   }
 
   function endGame() {
     console.log("Running endGame");
     preventClick = true;        
     stopTimer();             
-    const endMsg = 'You Win!!!';
-    $('#message').text(endMsg).show();
+    const endMsg = "You Win!!!";
+    $("#message").text(endMsg).show();
   }
 
-  // Initial header setup
-  updateClicks();
-  updatePairsMatched();
-  updateTimer();
-  startTimer();
+  function resetGame() {
+    stopTimer();
+    clicks = 0;
+    pairsMatched = 0;
+    timer = 60;
+    firstCard = null;
+    secondCard = null;
+    preventClick = false;
+
+    $("#message").hide().text("");
+    $(".card").removeClass("flip matched").off("click").on("click", cardClickHandler);
+
+    updateClicks();
+    updatePairsMatched();
+    updateTimer();
+    $("#total_pairs").text(totalPairs);
+
+    startTimer();
+  }
 
   // Card clicking
-  $(".card").on("click", function () {
+  function cardClickHandler() {
+    console.log("Running cardClickHandler");
     const $card = $(this);
     if (preventClick || $card.hasClass("matched")) return;
     const currentCard = $card.find(".front_face")[0];
@@ -120,7 +135,16 @@ function setup () {
       preventClick = true;
       checkForMatch();
       }
-    });
+    }
+
+  // Initial header setup
+  updateClicks();
+  updatePairsMatched();
+  updateTimer();
+  startTimer();
+
+  $(".card").on("click", cardClickHandler);
+  $("#resetBtn").on("click", resetGame);
   }
 
 $(document).ready(setup)
