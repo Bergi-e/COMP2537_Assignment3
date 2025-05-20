@@ -11,11 +11,11 @@ function setup () {
   let currentDifficulty = "easy";
 
   const difficulties = {
-    easy:   { pairs: 3,  time: 60  },
-    medium: { pairs: 6,  time: 90  },
-    hard:   { pairs: 9,  time: 120 }
+    easy:   { pairs: 3,  time: 30  },
+    medium: { pairs: 6,  time: 45  },
+    hard:   { pairs: 10,  time: 60 }
   };
- 
+
   function getPokedex(count) {
     const max = 898;
     const set = new Set();
@@ -59,7 +59,7 @@ function setup () {
       );
       $card.data('url', url);
       $card.on('click', cardClickHandler);
-      $('#game_grid').append($card);
+      $("#game_grid").append($card);
     })
   }
 
@@ -178,13 +178,16 @@ function setup () {
 
   }
 
-  $('#difficulty').on('change', function() {
+  $("#difficulty").on('change', function() {
     currentDifficulty = this.value;
     totalPairs = difficulties[currentDifficulty].pairs;
     timer = difficulties[currentDifficulty].time;
+
+
     updateTotalPairs(); 
     updatePairsMatched(); 
     updateTimer();
+    $("#game_grid").removeClass("easy medium hard").addClass(currentDifficulty);
     if (!gameStarted) loadCards(totalPairs);
   });
 
@@ -203,6 +206,9 @@ function setup () {
 
   $(".card").on("click", cardClickHandler);
   $("#resetBtn").on("click", resetGame);
-  }
+
+  $('#game_grid').addClass(currentDifficulty);
+  loadCards();
+}
 
 $(document).ready(setup)
