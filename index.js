@@ -7,6 +7,14 @@ function setup () {
   let clicks = 0;
   let timer = 60; // Default
   let gameTimer;
+  let gameStarted = false;
+
+  $("#startBtn").on("click", function() {
+    if (gameStarted) return;
+    gameStarted = true;
+    $("#startBtn").prop('disabled', true);
+    startTimer();
+  });
 
   function updateClicks() {
     console.log("Running updateClicks");
@@ -18,6 +26,15 @@ function setup () {
     $("#pairs_matched").text(pairsMatched);
     $("#pairs_left").text(totalPairs - pairsMatched);
   }
+
+  $("#startBtn").on("click", function() {
+    if (gameStarted) return;
+    gameStarted = true;
+
+    $("#startBtn").prop('disabled', true);
+
+    startTimer();
+  })
   
   function startTimer() {
     console.log("Running startTimer");
@@ -108,18 +125,22 @@ function setup () {
     $("#message").hide().text("");
     $(".card").removeClass("flip matched").off("click").on("click", cardClickHandler);
 
+    gameStarted = false;
+    $("#startBtn").prop("disabled", false);
+
     updateClicks();
     updatePairsMatched();
     updateTimer();
     $("#total_pairs").text(totalPairs);
 
-    startTimer();
+    updateTimer();
   }
 
   // Card clicking
   function cardClickHandler() {
     console.log("Running cardClickHandler");
     const $card = $(this);
+    if (!gameStarted) return;
     if (preventClick || $card.hasClass("matched")) return;
     const currentCard = $card.find(".front_face")[0];
     if (firstCard && currentCard === firstCard) return;
@@ -141,7 +162,6 @@ function setup () {
   updateClicks();
   updatePairsMatched();
   updateTimer();
-  startTimer();
 
   $(".card").on("click", cardClickHandler);
   $("#resetBtn").on("click", resetGame);
