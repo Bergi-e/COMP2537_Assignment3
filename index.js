@@ -4,6 +4,16 @@ function setup () {
   let preventClick = false;
   let pairsMatched = 0;
   let totalPairs = 3; // Default
+  let clicks = 0;
+
+  function updateClicks() {
+    $("#clicks").text(clicks);
+  }
+
+  function updatePairsMatched() {
+    $("#pairs_matched").text(pairsMatched);
+    $("#pairs_left").text(totalPairs - pairsMatched);
+  }
 
   function checkForMatch() {
     console.log("Running checkForMatch");
@@ -19,6 +29,9 @@ function setup () {
     $(`#${firstCard.id}`).parent().off('click').addClass('matched');
     $(`#${secondCard.id}`).parent().off('click').addClass('matched');
     pairsMatched++;
+    updatePairsMatched();
+    console.log(`Pairs matched: ${pairsMatched}`);
+    console.log(`Total pairs: ${totalPairs}`);
     if (pairsMatched === totalPairs) endGame();
     resetSelection();
   }
@@ -50,6 +63,8 @@ function setup () {
     if (preventClick || $card.hasClass("matched")) return;
     const currentCard = $card.find(".front_face")[0];
     if (firstCard && currentCard === firstCard) return;
+    clicks++;
+    updateClicks();
 
     $card.addClass("flip");
 
